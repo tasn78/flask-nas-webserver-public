@@ -56,49 +56,64 @@ A full-featured Network Attached Storage (NAS) web server built with Python Flas
 - **Data Processing**: Pandas
 
 ## 📁 Project Structure
+
+```
 flask-nas-webserver/
 ├── app/
-│   ├── auth/                 # Authentication blueprint
-│   │   ├── init.py
+│   ├── auth/                    # Authentication blueprint
+│   │   ├── __init__.py
 │   │   ├── routes.py
 │   │   └── forms.py
-│   ├── backup/               # Backup management blueprint
-│   │   ├── init.py
+│   ├── backup/                  # Backup management blueprint
+│   │   ├── __init__.py
 │   │   ├── routes.py
 │   │   └── forms.py
-│   ├── file_manager/         # File operations blueprint
-│   │   ├── init.py
+│   ├── file_manager/            # File operations blueprint
+│   │   ├── __init__.py
 │   │   ├── routes.py
 │   │   └── forms.py
-│   ├── system_monitor/       # System monitoring blueprint
-│   │   ├── init.py
+│   ├── system_monitor/          # System monitoring blueprint
+│   │   ├── __init__.py
 │   │   └── routes.py
-│   ├── user_manager/         # User management blueprint
-│   │   ├── init.py
+│   ├── user_manager/            # User management blueprint
+│   │   ├── __init__.py
 │   │   ├── routes.py
 │   │   └── forms.py
-│   ├── static/               # CSS, JS, images
+│   ├── static/                  # Static files
 │   │   ├── css/
+│   │   │   └── style.css
 │   │   └── js/
-│   ├── templates/            # Jinja2 HTML templates
+│   │       └── main.js
+│   ├── templates/               # Jinja2 HTML templates
 │   │   ├── auth/
+│   │   │   ├── login.html
+│   │   │   └── register.html
 │   │   ├── backup/
+│   │   │   ├── index.html
+│   │   │   └── create.html
 │   │   ├── file_manager/
+│   │   │   └── index.html
 │   │   ├── system_monitor/
+│   │   │   ├── index.html
+│   │   │   └── logs.html
 │   │   ├── user_manager/
+│   │   │   ├── index.html
+│   │   │   ├── create.html
+│   │   │   └── edit.html
 │   │   └── base.html
-│   ├── init.py          # App factory
-│   ├── models.py            # Database models
-│   ├── decorators.py        # Custom decorators
-│   └── filters.py           # Template filters
-├── config.py                # Configuration
-├── run.py                   # Application entry point
-├── init_db.py              # Database initialization
-├── create_admin.py         # Admin user creation utility
-├── requirements.txt        # Python dependencies
-├── .env.example            # Environment variables template
-├── .gitignore             # Git ignore rules
-└── README.md
+│   ├── __init__.py             # App factory
+│   ├── models.py               # Database models
+│   ├── decorators.py           # Custom decorators
+│   └── filters.py              # Template filters
+├── config.py                   # Configuration
+├── run.py                      # Application entry point
+├── init_db.py                  # Database initialization
+├── create_admin.py             # Admin user creation utility
+├── requirements.txt            # Python dependencies
+├── .env.example                # Environment variables template
+├── .gitignore                  # Git ignore rules
+└── README.md                   # Project documentation
+```
 
 ## 📋 Prerequisites
 
