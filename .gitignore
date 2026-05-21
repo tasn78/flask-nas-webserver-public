@@ -1,0 +1,41 @@
+# Environment variables - CRITICAL
+.env
+.env.local
+
+# Database files
+*.db
+*.sqlite
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+
+# Flask
+instance/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SSL Certificates
+*.key
+*.crt
+*.pem
+ssl/
+
+# Logs
+*.log
+logs/
+
+# Uploads
+NAS_Storage/
+uploads/

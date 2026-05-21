@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}System Logs - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">System Logs</h4>
+        <div>
+            <a href="{{ url_for('system_monitor.clear_logs') }}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Are you sure you want to clear all logs? This action cannot be undone.');">
+                <i class="fas fa-trash"></i> Clear Logs
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs.items %}
+                        <tr>
+                            <td>
+                                {% if log.log_type == 'info' %}
+                                    <span class="badge bg-info">INFO</span>
+                                {% elif log.log_type == 'warning' %}
+                                    <span class="badge bg-warning">WARNING</span>
+                                {% elif log.log_type == 'error' %}
+                                    <span class="badge bg-danger">ERROR</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ log.message }}</td>
+                            <td>{{ log.timestamp }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">No logs found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+                {% if logs.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('system_monitor.logs', page=logs.prev_num) }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                {% endif %}
+                
+                {% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == logs.page %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('system_monitor.logs', page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if logs.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('system_monitor.logs', page=logs.next_num) }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Next</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

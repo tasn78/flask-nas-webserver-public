@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Create User - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Create New User</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control") }}
+                {% for error in form.username.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                {% for error in form.email.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.password2.label(class="form-label") }}
+                {{ form.password2(class="form-control") }}
+                {% for error in form.password2.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.role.label(class="form-label") }}
+                {{ form.role(class="form-select") }}
+                {% for error in form.role.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.permissions.label(class="form-label") }}
+                <div>
+                    {% for choice in form.permissions %}
+                        <div class="form-check form-check-inline">
+                            {{ choice(class="form-check-input") }}
+                            {{ choice.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.permissions.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

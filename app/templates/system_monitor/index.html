@@ -1,0 +1,166 @@
+<!-- app/templates/system_monitor/index.html -->
+{% extends "base.html" %}
+
+{% block title %}System Monitor - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">CPU Usage</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="gauge-container">
+                    <div class="gauge" id="cpu-gauge"></div>
+                    <div class="gauge-label">
+                        <span id="cpu-value">{{ cpu_percent }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Memory Usage</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="gauge-container">
+                    <div class="gauge" id="memory-gauge"></div>
+                    <div class="gauge-label">
+                        <span id="memory-value">{{ memory.percent }}%</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        {{ (memory.used / (1024**3))|round(2) }} GB / {{ (memory.total / (1024**3))|round(2) }} GB
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Disk Usage</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="gauge-container">
+                    <div class="gauge" id="disk-gauge"></div>
+                    <div class="gauge-label">
+                        <span id="disk-value">{{ disk.percent }}%</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        {{ (disk.used / (1024**3))|round(2) }} GB / {{ (disk.total / (1024**3))|round(2) }} GB
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">System Logs</h5>
+                <a href="{{ url_for('system_monitor.logs') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Message</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                                <tr>
+                                    <td>
+                                        {% if log.log_type == 'info' %}
+                                            <span class="badge bg-info">INFO</span>
+                                        {% elif log.log_type == 'warning' %}
+                                            <span class="badge bg-warning">WARNING</span>
+                                        {% elif log.log_type == 'error' %}
+                                            <span class="badge bg-danger">ERROR</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ log.message }}</td>
+                                    <td>{{ log.timestamp }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No logs found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gauge.js/1.3.7/gauge.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configure CPU gauge
+    const cpuGauge = new Gauge(document.getElementById('cpu-gauge'));
+    configureGauge(cpuGauge, {{ cpu_percent }});
+
+    // Configure Memory gauge
+    const memoryGauge = new Gauge(document.getElementById('memory-gauge'));
+    configureGauge(memoryGauge, {{ memory.percent }});
+
+    // Configure Disk gauge
+    const diskGauge = new Gauge(document.getElementById('disk-gauge'));
+    configureGauge(diskGauge, {{ disk.percent }});
+
+    // Refresh stats every 5 seconds
+    setInterval(updateStats, 5000);
+
+    function configureGauge(gauge, value) {
+        gauge.maxValue = 100;
+        gauge.setMinValue(0);
+        gauge.animationSpeed = 32;
+        gauge.set(value);
+        gauge.setOptions({
+            strokeWidth: 0.1,
+            color: function(percentValue) {
+                if (percentValue < 60) return "#5cb85c";
+                if (percentValue < 80) return "#f0ad4e";
+                return "#d9534f";
+            },
+            generateGradient: true,
+            highDpiSupport: true
+        });
+    }
+
+    function updateStats() {
+        fetch("{{ url_for('system_monitor.get_stats') }}")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cpu-value').textContent = data.cpu.percent + '%';
+                cpuGauge.set(data.cpu.percent);
+
+                document.getElementById('memory-value').textContent = data.memory.percent + '%';
+                memoryGauge.set(data.memory.percent);
+
+                document.getElementById('disk-value').textContent = data.disk.percent + '%';
+                diskGauge.set(data.disk.percent);
+            })
+            .catch(error => console.error('Error fetching stats:', error));
+    }
+});
+</script>
+{% endblock %}

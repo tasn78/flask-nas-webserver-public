@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Backup - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Schedule New Backup</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows=3) }}
+                {% for error in form.description.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.source_path.label(class="form-label") }}
+                {{ form.source_path(class="form-control") }}
+                <div class="form-text">Path to the directory you want to back up</div>
+                {% for error in form.source_path.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.destination_path.label(class="form-label") }}
+                {{ form.destination_path(class="form-control") }}
+                <div class="form-text">Path where backup files will be stored</div>
+                {% for error in form.destination_path.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.schedule.label(class="form-label") }}
+                {{ form.schedule(class="form-select") }}
+                {% for error in form.schedule.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Edit User: {{ user.username }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control") }}
+                {% for error in form.username.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                {% for error in form.email.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+                <small class="form-text text-muted">Leave blank to keep current password</small>
+                {% for error in form.password.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.password2.label(class="form-label") }}
+                {{ form.password2(class="form-control") }}
+                {% for error in form.password2.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.role.label(class="form-label") }}
+                {{ form.role(class="form-select") }}
+                {% for error in form.role.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.permissions.label(class="form-label") }}
+                <div>
+                {% for value, label in form.permissions.choices %}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox"
+                               id="permission_{{ value }}"
+                               name="{{ form.permissions.name }}"
+                               value="{{ value }}"
+                               {% if value in form.permissions.data %}checked{% endif %}>
+                        <label class="form-check-label" for="permission_{{ value }}">{{ label }}</label>
+                    </div>
+                {% endfor %}
+                </div>
+                {% for error in form.permissions.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <a href="{{ url_for('user_manager.index') }}" class="btn btn-secondary">Back to Users</a>
+    </div>
+</div>
+{% endblock %}

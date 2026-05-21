@@ -1,0 +1,82 @@
+<!-- app/templates/backup/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Backup Management - NAS Web Server{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Backup Management</h4>
+        <a href="{{ url_for('backup.create') }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i> Schedule Backup
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Schedule</th>
+                        <th>Last Run</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for backup in backups %}
+                        <tr>
+                            <td>{{ backup.name }}</td>
+                            <td>{{ backup.source_path }}</td>
+                            <td>{{ backup.destination_path }}</td>
+                            <td>{{ backup.schedule|title }}</td>
+                            <td>
+                                {% if backup.last_run %}
+                                    {{ backup.last_run }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if backup.status == 'success' %}
+                                    <span class="badge bg-success">Success</span>
+                                {% elif backup.status == 'failed' %}
+                                    <span class="badge bg-danger">Failed</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <!-- Run Backup Button -->
+                                    <a href="{{ url_for('backup.run_backup', id=backup.id) }}" class="btn btn-outline-primary" title="Run Backup">
+                                        <i class="fas fa-play"></i> Run
+                                    </a>
+
+                                    <!-- Delete Backup Button -->
+                                    <a href="{{ url_for('backup.delete', id=backup.id) }}" class="btn btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this backup schedule?');" title="Delete Backup">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+
+                                    <!-- Restore Button -->
+                                    <a href="{{ url_for('backup.restore_backup', id=backup.id) }}" class="btn btn-outline-success"
+                                       onclick="return confirm('Are you sure you want to restore this backup?');">
+                                        <i class="fas fa-undo"></i> Restore
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center">No backup schedules found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
